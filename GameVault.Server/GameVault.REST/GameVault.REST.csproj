@@ -7,7 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.7" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.7">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.7" />
+  </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\GameVault.ObjectModel\GameVault.ObjectModel.csproj" />
+    <ProjectReference Include="..\GameVault.Repository\GameVault.Repository.csproj" />
+    <ProjectReference Include="..\GameVault.Services\GameVault.Services.csproj" />
   </ItemGroup>
 
 </Project>

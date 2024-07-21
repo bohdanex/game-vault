@@ -1,8 +1,15 @@
-var builder = WebApplication.CreateBuilder(args);
+using GameVault.Repository;
+using Microsoft.EntityFrameworkCore;
+
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+
+// Get configurations.
+IConfiguration configuration = builder.Configuration;
 
 // Add services to the container.
-
-builder.Services.AddControllers();
+IServiceCollection services = builder.Services;
+services.AddControllers();
+services.AddDbContext<AppDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("GameVault"), actions => actions.MigrationsAssembly("GameVault.REST")));
 
 var app = builder.Build();
 
