@@ -3,35 +3,47 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GameVault.Repository.Abstraction
 {
-    public abstract class RepositoryBase<T> where T : BaseEntity
+    public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where TEntity : BaseEntity
     {
-        protected readonly AppDbContext _context;
+        protected readonly AppDbContext _dbContext;
 
         protected RepositoryBase(AppDbContext context)
         {
-            _context = context;
+            _dbContext = context;
         }
 
-        public async Task<T?> GetById(Guid id)
+        public virtual async Task<TEntity?> GetById(Guid id)
         {
-            return await _context.FindAsync<T>(id);
+            return await _dbContext.FindAsync<TEntity>(id);
         }
 
-        public async Task<List<T>> GetAll()
+        public virtual async Task<List<TEntity>> GetAll()
         {
-            return await _context.Set<T>().ToListAsync();
+            return await _dbContext.Set<TEntity>().ToListAsync();
         }
 
-        public async Task Delete(T entity)
+        public virtual async Task Delete(TEntity entity)
         {
-            _context.Remove<T>(entity);
-            await _context.SaveChangesAsync();
+            _dbContext.Remove<TEntity>(entity);
+            await _dbContext.SaveChangesAsync();
         }
 
-        public async Task Update(T entity) 
+        public virtual async Task Update(TEntity entity)
         { 
-            _context.Update<T>(entity);
-            await _context.SaveChangesAsync();
+            _dbContext.Update<TEntity>(entity);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task Add(TEntity entity)
+        {
+            await _dbContext.AddAsync(entity);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task Remove(TEntity entity)
+        {
+            _dbContext.Remove(entity);
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

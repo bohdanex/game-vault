@@ -7,7 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Abstraction\" />
+    <ProjectReference Include="..\GameVault.ObjectModel\GameVault.ObjectModel.csproj" />
+    <ProjectReference Include="..\GameVault.Repository\GameVault.Repository.csproj" />
   </ItemGroup>
 
 </Project>
