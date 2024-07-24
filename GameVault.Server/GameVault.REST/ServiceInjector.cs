@@ -14,7 +14,7 @@ namespace GameVault.REST
 
             // Providers
             services.AddTransient<IUserRepository, UserRepository>();
-            services.AddTransient<ISteamGamesRepository, SteamGamesProvider>();
+            services.AddTransient<ISteamGamesRepository, SteamGamesRepository>();
             services.AddTransient<IGameKeyRepository, GameKeyRepository>();
             //Servicesa
 

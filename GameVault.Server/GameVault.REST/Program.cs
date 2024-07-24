@@ -19,8 +19,9 @@ IConfiguration configuration = builder.Configuration;
 IServiceCollection services = builder.Services;
 services.AddControllers();
 
-string dbConnectionString = builder.Environment.IsDevelopment() ? configuration.GetConnectionString("GameVault")! : "";
+string dbConnectionString = builder.Environment.IsDevelopment() ? configuration.GetConnectionString("Game Vault SQL")! : "";
 services.AddDbContext<AppDbContext>(options => options.UseSqlServer(dbConnectionString, actions => actions.MigrationsAssembly("GameVault.REST")));
+services.AddStackExchangeRedisCache(options => options.Configuration = configuration.GetConnectionString("Redis Cache"));
 
 services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(conf =>

@@ -7,5 +7,6 @@ namespace GameVault.Services.Abstraction
     {
         Task AddNewGame(int steamGameId, double price);
         Task<List<SteamGameDTO>> GetAll();
+        Task<List<SteamGameDTO>> GetBestSellers(int minBuyCount, int take);
     }
 }

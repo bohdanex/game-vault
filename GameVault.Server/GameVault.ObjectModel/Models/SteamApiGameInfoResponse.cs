@@ -10,6 +10,8 @@ namespace GameVault.ObjectModel.Models
         public class GameData
         {
             public string Name { get; set; }
+            [JsonPropertyName("short_description")]
+            public string Description { get; set; }
             public bool IsFree { get; set; }
             [JsonPropertyName("header_image")]
             public string HeaderImage { get; set; }

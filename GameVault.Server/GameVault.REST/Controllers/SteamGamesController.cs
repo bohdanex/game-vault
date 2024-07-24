@@ -22,10 +22,19 @@ namespace GameVault.REST.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         [Route("get-all")]
         public async Task<List<SteamGameDTO>> GetSteamGames()
         {
             return await _steamGamesService.GetAll();
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("best/{minCount:int}/{take:int:max(20)}")]
+        public async Task<List<SteamGameDTO>> GetBestSellers(int minCount, int take)
+        {
+            return await _steamGamesService.GetBestSellers(minCount, take);
         }
     }
 }
