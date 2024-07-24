@@ -1,14 +1,12 @@
 using GameVault.Repository;
-using GameVault.Services;
-using GameVault.Services.Abstraction;
-using GameVault.Repository.Abstraction;
-using GameVault.Repository.Implementation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Text;
 using GameVault.REST;
+using Azure.Security.KeyVault.Secrets;
+using Azure.Identity;
+using Microsoft.Extensions.Azure;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -19,9 +17,30 @@ IConfiguration configuration = builder.Configuration;
 IServiceCollection services = builder.Services;
 services.AddControllers();
 
-string dbConnectionString = builder.Environment.IsDevelopment() ? configuration.GetConnectionString("Game Vault SQL")! : "";
-services.AddDbContext<AppDbContext>(options => options.UseSqlServer(dbConnectionString, actions => actions.MigrationsAssembly("GameVault.REST")));
-services.AddStackExchangeRedisCache(options => options.Configuration = configuration.GetConnectionString("Redis Cache"));
+string SQLdbConnectionString = string.Empty;
+string redisConnectionString = string.Empty;
+if (builder.Environment.IsDevelopment())
+{
+    SQLdbConnectionString = configuration.GetConnectionString("Game Vault SQL")!;
+    redisConnectionString = configuration.GetConnectionString("Redis Cache")!;
+}
+else if (builder.Environment.IsProduction())
+{
+    Uri keyVaultURI = new(configuration["KeyVault:URI"]!);
+    string tenantId = configuration["KeyVault:DirectoryId"]!;
+    string clientId = configuration["KeyVault:ClientId"]!;
+    string clientSecret = configuration["KeyVault:ClientSecret"]!;
+    ClientSecretCredential clientSecretCredential = new(tenantId, clientId, clientSecret);
+
+    builder.Configuration.AddAzureKeyVault(keyVaultURI, clientSecretCredential);
+    SecretClient secretClient = new(keyVaultURI, clientSecretCredential);
+  
+    SQLdbConnectionString = configuration["ProdConnection"]!;
+    //redisConnectionString = (await secretClient.GetSecretAsync("RedisConnection")).Value.Value;
+}
+
+services.AddDbContext<AppDbContext>(options => options.UseSqlServer(SQLdbConnectionString, actions => actions.MigrationsAssembly("GameVault.REST")));
+services.AddStackExchangeRedisCache(options => options.Configuration = redisConnectionString);
 
 services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(conf =>
