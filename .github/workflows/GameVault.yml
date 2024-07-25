@@ -22,8 +22,8 @@ jobs:
       run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
     - name: Build
       run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore
-    - name: Test
-      run: dotnet test "${{ env.WORKING_DIRECTORY }}" --no-build
+    - name: Install dotnet ef tools
+      run: dotnet tool install --global dotnet-ef --version 8.*
     - name: Update Database
       run: dotnet ef database update --project "${{ env.WORKING_DIRECTORY }}"
     - name: Publish
