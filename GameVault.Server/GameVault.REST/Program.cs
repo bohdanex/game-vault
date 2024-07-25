@@ -27,11 +27,8 @@ if (builder.Environment.IsDevelopment())
 }
 else if (builder.Environment.IsProduction())
 {
-    Uri keyVaultURI = new(configuration["KeyVault:URI"]!);
-    string tenantId = configuration["KeyVault:DirectoryId"]!;
-    string clientId = configuration["KeyVault:ClientId"]!;
-    string clientSecret = configuration["KeyVault:ClientSecret"]!;
-    ClientSecretCredential clientSecretCredential = new(tenantId, clientId, clientSecret);
+    Uri keyVaultURI = new(configuration["KeyVaultURI"]!);
+    DefaultAzureCredential clientSecretCredential = new();
 
     builder.Configuration.AddAzureKeyVault(keyVaultURI, clientSecretCredential);
     SecretClient secretClient = new(keyVaultURI, clientSecretCredential);
