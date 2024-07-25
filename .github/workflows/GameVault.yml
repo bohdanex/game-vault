@@ -2,7 +2,7 @@ name: Build and deploy .NET Core application to Web App GameVault
 on:
   push:
     branches:
-    - develop
+    - main
 env:
   AZURE_WEBAPP_NAME: GameVault
   AZURE_WEBAPP_PACKAGE_PATH: GameVault.REST\published
