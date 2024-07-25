@@ -19,6 +19,7 @@ services.AddControllers();
 
 string SQLdbConnectionString = string.Empty;
 string redisConnectionString = string.Empty;
+
 if (builder.Environment.IsDevelopment())
 {
     SQLdbConnectionString = configuration.GetConnectionString("Game Vault SQL")!;
@@ -36,7 +37,7 @@ else if (builder.Environment.IsProduction())
     SecretClient secretClient = new(keyVaultURI, clientSecretCredential);
   
     SQLdbConnectionString = configuration["ProdConnection"]!;
-    //redisConnectionString = (await secretClient.GetSecretAsync("RedisConnection")).Value.Value;
+    redisConnectionString = configuration["RedisConnection"]!;
 }
 
 services.AddDbContext<AppDbContext>(options => options.UseSqlServer(SQLdbConnectionString, actions => actions.MigrationsAssembly("GameVault.REST")));
